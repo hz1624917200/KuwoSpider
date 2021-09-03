@@ -1,5 +1,6 @@
 import requests
 
+# request headers from edge(chromium)
 request_headers_raw = '''Pragma: no-cache
 Cache-Control: no-cache
 Sec-Ch-Ua: "Chromium";v="92", " Not A;Brand";v="99", "Microsoft Edge";v="92"
@@ -22,6 +23,7 @@ for line in request_headers_raw.split('\n'):
 # print(request_headers)
 
 
+# convert a song's rid to uri, using kuwo api
 def rid2uri(rid: str) -> str:
 	base_url = 'https://www.kuwo.cn/url'
 	params = {'format': 'mp3', 'rid': rid,
@@ -31,7 +33,8 @@ def rid2uri(rid: str) -> str:
 	return eval(response.content.decode('utf-8'))['url']
 
 
-def Download_mp3(url: str) -> bytes:
+# Simple Download function, return mp3 bytes
+def download_mp3(url: str) -> bytes:
 	try:
 		response = requests.get(url, headers=request_headers)
 		return response.content
@@ -42,4 +45,4 @@ def Download_mp3(url: str) -> bytes:
 if __name__ == "__main__":
 	uri = rid2uri('3453727')
 	print(uri)
-	Download_mp3(uri)
+	download_mp3(uri)

@@ -5,14 +5,15 @@ from os.path import exists, expanduser
 class Song:
 	default_download_path = '{}/Music/'.format(expanduser('~'))
 
+	# Instance initialize
 	def __init__(self, title: str, rid: str, singer: str, introduction: str) -> None:
 		self.title = title
 		self.rid = rid
 		self.singer = singer
 		self.introduction = introduction
 
+	# Download a song, including uri searching and downloading
 	def download(self, path=default_download_path) -> None:
-
 		mp3_data = Download_mp3(rid2uri(self.rid))
 		full_name = '{}{}.mp3'.format(Song.default_download_path, self.title)
 		if exists(full_name):
@@ -23,6 +24,7 @@ class Song:
 		print("Downloading success, file saved to {}".format(full_name))
 
 
+# Class function test
 if __name__ == "__main__":
 	test_song = Song('安河桥', '3453727', '宋东野', '')
 	test_song.download()
