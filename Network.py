@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from requests.utils import dict_from_cookiejar
 from retrying import retry
+import json
 
 # request headers from edge(chromium)
 request_headers_raw = '''Pragma: no-cache
@@ -46,11 +47,15 @@ def rid2uri(rid: str) -> str:
 	'response': 'url', 'type': 'convert_url3', 'br': '128kmp3', 'from': 'web'}
 
 	response = requests.get(base_url, params=params, headers=request_headers)
-	return eval(response.content.decode('utf-8'))['url']
+	url = json.loads(response.text).get('url', '')
+	return url
 
 
 # Simple Download function, return mp3 bytes
 def download_mp3(url: str) -> bytes:
+	if url == '':
+		print("url error, please try again")
+		return b''
 	try:
 		response = my_get(url)
 		return response.content
@@ -59,10 +64,11 @@ def download_mp3(url: str) -> bytes:
 # end region
 
 
-def search(keyword: str) -> None:
+def search(keyword: str) -> list:
 	from Class import Song
 
-	param = {"key": keyword}
+	# Get only top 30 records
+	param = {"key": keyword, 'pn': '1', 'rn': '30'}
 	try:
 		# Get kw_token and csrf token
 		# Without these, music list api will raise error
@@ -73,8 +79,17 @@ def search(keyword: str) -> None:
 		base_url = "https://www.kuwo.cn/api/www/search/searchMusicBykeyWord"
 		response = my_get(base_url, param)
 
-		soup = BeautifulSoup(response.text, features="html.parser")
+		# get data and convert search list to a dict
+		search_list = json.loads(response.text)['data']
+		print(search_list['list'][0])
+		print(search_list['list'][-1])
+		print(len(search_list['list']))
 
+		for record in search_list:
+			# This song is not free
+			if 'payInfo' in record:
+				continue
+			song = Song(record['name'], record['musicrid'].split('_')[-1], record)
 	except requests.ConnectionError:
 		print("search error, have tried 3 times, please check your internet connection")
 
