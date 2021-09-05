@@ -101,9 +101,9 @@ def search(keyword: str) -> List[Class.Song]:
 
 			song_list.append(song)
 
-		# For Debug
-		for i in song_list:
-			print(i)
+		# # For Debug
+		# for i in song_list:
+		# 	print(i)
 		return song_list
 	except requests.ConnectionError:
 		print("search error, have tried 3 times, please check your internet connection")
