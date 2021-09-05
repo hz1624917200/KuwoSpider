@@ -2,7 +2,6 @@ from os.path import exists, expanduser
 
 
 class Song:
-
 	default_download_path = '{}/Music/'.format(expanduser('~'))
 
 	# Instance initialize
@@ -46,8 +45,11 @@ class Song:
 			return
 		full_name = '{}{}.mp3'.format(path, self.title)
 		if exists(full_name):
-			if not input('File {}.mp3 already exists, overwrite it(y/n y)?'.format(self.title)) in ['n', 'no']:
-				return
+			if not input('File {}.mp3 already exists, overwrite it(y/n n)?'.format(self.title)) in ['y', 'yes']:
+				i = 2
+				while exists('{}{}({}).mp3'.format(path, self.title, i)):
+					i += 1
+				full_name = '{}{}({}).mp3'.format(path, self.title, i)
 		with open('{}'.format(full_name), 'wb') as f:
 			f.write(mp3_data)
 		print("Downloading success, file saved to {}".format(full_name))

@@ -3,7 +3,11 @@ from requests.utils import dict_from_cookiejar
 from retrying import retry
 import json
 
+from typing import List
+
 # request headers from edge(chromium)
+import Class
+
 request_headers_raw = '''Pragma: no-cache
 Cache-Control: no-cache
 Sec-Ch-Ua: "Chromium";v="92", " Not A;Brand";v="99", "Microsoft Edge";v="92"
@@ -64,7 +68,7 @@ def download_mp3(url: str) -> bytes:
 
 
 @retry(stop_max_attempt_number=2)
-def search(keyword: str) -> list:
+def search(keyword: str) -> List[Class.Song]:
 	from Class import Song
 
 	# Get only top 30 records
