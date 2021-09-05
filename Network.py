@@ -1,5 +1,4 @@
 import requests
-from bs4 import BeautifulSoup
 from requests.utils import dict_from_cookiejar
 from retrying import retry
 import json
@@ -64,6 +63,7 @@ def download_mp3(url: str) -> bytes:
 # end region
 
 
+@retry(stop_max_attempt_number=2)
 def search(keyword: str) -> list:
 	from Class import Song
 
@@ -81,15 +81,26 @@ def search(keyword: str) -> list:
 
 		# get data and convert search list to a dict
 		search_list = json.loads(response.text)['data']
-		print(search_list['list'][0])
-		print(search_list['list'][-1])
-		print(len(search_list['list']))
+		# print(search_list['list'][0])
+		# print(search_list['list'][-1])
+		# print(len(search_list['list']))
 
-		for record in search_list:
+		song_list = []
+		for record in search_list['list']:
+			# Create a new Song instance
+			song = Song(record['name'], record['musicrid'].split('_')[-1], record['artist'],
+			record['album'], duration=int(record['duration']))
+
 			# This song is not free
-			if 'payInfo' in record:
-				continue
-			song = Song(record['name'], record['musicrid'].split('_')[-1], record)
+			if record['payInfo']['play'] == '1111':
+				song.free = False
+
+			song_list.append(song)
+
+		# For Debug
+		for i in song_list:
+			print(i)
+		return song_list
 	except requests.ConnectionError:
 		print("search error, have tried 3 times, please check your internet connection")
 
@@ -99,4 +110,9 @@ if __name__ == "__main__":
 	# print(uri)
 	# download_mp3(uri)
 
-	search("宋东野")
+	# # None-Free Song can also downloaded
+	# uri = rid2uri('325842')
+	# print(uri)
+
+	# search("宋东野")
+	search("Taylor Swift")
