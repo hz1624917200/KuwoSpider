@@ -64,6 +64,11 @@ class RankList:
 		self.lid = lid
 		self.parent = parent
 
+	def __str__(self):
+		s = MyString.chinese_format(self.name, 15)
+		s += self.parent
+		return s
+
 
 class MyString:
 	full_len_space = chr(12288)

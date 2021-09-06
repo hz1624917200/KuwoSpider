@@ -33,10 +33,13 @@ for line in request_headers_raw.split('\n'):
 cookies = {}
 
 
-@retry(stop_max_attempt_number=3, wait_random_min=3000, wait_random_max=5000)
 # self defined requests.get function, before return response, update cookies and CSRF token
+@retry(stop_max_attempt_number=3, wait_random_min=3000, wait_random_max=5000)
 def my_get(url: str, params: dict = None):
 	try:
+		init_url = 'https://www.kuwo.cn/'
+		if cookies == {} and url != init_url:
+			my_get(init_url)
 		response = requests.get(url, params, headers=request_headers, cookies=cookies)
 		cookies.update(dict_from_cookiejar(response.cookies))
 		if 'kw_token' in cookies:
@@ -46,7 +49,6 @@ def my_get(url: str, params: dict = None):
 		# print(e.args)
 		if e.args[0] == "check_hostname requires server_hostname":
 			print('Proxy setting error, please check your network settings')
-			exit(-1)
 
 
 # region Song_Download
@@ -81,10 +83,11 @@ def search(keyword: str) -> List[Class.Song]:
 	# Get only top 30 records
 	param = {"key": keyword, 'pn': '1', 'rn': '30'}
 	try:
-		# Get kw_token and csrf token
-		# Without these, music list api will raise error
-		base_url = "https://www.kuwo.cn/search/list"
-		my_get(base_url, param)
+		# We use a stronger and robuster handling system in my_get
+		# # Get kw_token and csrf token
+		# # Without these, music list api will raise error
+		# base_url = "https://www.kuwo.cn/search/list"
+		# my_get(base_url, param)
 
 		# Get Music List
 		base_url = "https://www.kuwo.cn/api/www/search/searchMusicBykeyWord"
@@ -117,8 +120,23 @@ def search(keyword: str) -> List[Class.Song]:
 
 
 def fill_rank_list() -> List[Class.RankList]:
-	pass
-	# base_url =
+	from Class import RankList
+
+	base_url = 'https://www.kuwo.cn/api/www/bang/bang/bangMenu?httpsStatus=1'
+	response = my_get(base_url)
+	if not response:
+		exit(0)
+
+	res_list = []
+	rank_list_json = json.loads(response.text)['data']
+	for parent_rank_lists in rank_list_json:
+		parent_rank_name = parent_rank_lists['name']
+		for rank in parent_rank_lists['list']:
+			temp_rank_list = RankList(rank['name'], rank['sourceid'], parent_rank_name)
+			res_list.append(temp_rank_list)
+
+	return res_list
+
 
 if __name__ == "__main__":
 	# uri = rid2uri('3453727')
@@ -130,4 +148,6 @@ if __name__ == "__main__":
 	# print(uri)
 
 	# search("宋东野")
-	search("Taylor Swift")
+	# search("Taylor Swift")
+
+	fill_rank_list()
