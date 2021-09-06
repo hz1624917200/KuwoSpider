@@ -37,15 +37,18 @@ class Song:
 		return base_url + self.rid
 
 	# Download a song, including uri searching and downloading
-	def download(self, path=default_download_path) -> None:
+	def download(self, path=default_download_path, index: int = 0) -> None:
 		from Network import rid2uri, download_mp3
 
 		mp3_data = download_mp3(rid2uri(self.rid))
 		if mp3_data == b'':
 			return
-		full_name = '{}{}.mp3'.format(path, self.title)
+
+		index_str = f'({index})' if index > 1 else ''
+		full_name = f'{path}{self.title}{index_str}.mp3'
 		if exists(full_name):
 			if not input('File {}.mp3 already exists, overwrite it(y/n n)?'.format(self.title)) in ['y', 'yes']:
+				# rename the download name
 				i = 2
 				while exists('{}{}({}).mp3'.format(path, self.title, i)):
 					i += 1

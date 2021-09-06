@@ -36,11 +36,17 @@ cookies = {}
 @retry(stop_max_attempt_number=3, wait_random_min=3000, wait_random_max=5000)
 # self defined requests.get function, before return response, update cookies and CSRF token
 def my_get(url: str, params: dict = None):
-	response = requests.get(url, params, headers=request_headers, cookies=cookies)
-	cookies.update(dict_from_cookiejar(response.cookies))
-	if 'kw_token' in cookies:
-		request_headers.update({"CSRF": cookies['kw_token']})
-	return response
+	try:
+		response = requests.get(url, params, headers=request_headers, cookies=cookies)
+		cookies.update(dict_from_cookiejar(response.cookies))
+		if 'kw_token' in cookies:
+			request_headers.update({"CSRF": cookies['kw_token']})
+		return response
+	except ValueError as e:
+		# print(e.args)
+		if e.args[0] == "check_hostname requires server_hostname":
+			print('Proxy setting error, please check your network settings')
+			exit(-1)
 
 
 # region Song_Download
@@ -112,6 +118,7 @@ def search(keyword: str) -> List[Class.Song]:
 
 def fill_rank_list() -> List[Class.RankList]:
 	pass
+	# base_url =
 
 if __name__ == "__main__":
 	# uri = rid2uri('3453727')
