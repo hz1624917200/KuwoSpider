@@ -72,16 +72,23 @@ def search(kw: str) -> None:
 
 	# Attention, choice == index + 1
 	while True:
-		choice = input('choose which you want to download (input "q" to return), support section ex "2-5": ')
+		choice = input('choose which you want to download\n (input "q" to return, \
+"d" to pagedown, "u" to pageup, "h" to back head), support section ex "2-5": ')
+
+		# Special keyword
 		# quit
 		if choice == 'q':
 			return
+		# pageup
+		elif choice == 'u':
+			pass
 
+		# download music by id section
 		if not choice.isnumeric() or int(choice) > len(song_list) or int(choice) < 1:
 			res = re.match(r'\d+-\d+', choice)
 			if res:
 				(start, end, *_) = res.group().split('-')
-				if int(start) < 1 or int(end) > len(song_list):
+				if int(start) < 1 or int(end) > len(song_list) or int(start) > int(end):
 					print('Invalid input, try again.')
 				else:
 					# valid section input, return iterable
@@ -90,6 +97,7 @@ def search(kw: str) -> None:
 			else:
 				print('Invalid input, try again.')
 		else:
+			# single number
 			song_list[int(choice) - 1].download()
 
 
@@ -97,10 +105,6 @@ def search(kw: str) -> None:
 if __name__ == '__main__':
 	# print a banner
 	print_hi('ZhengHuang and HeQi')
-
-	if len(argv) > 1:
-		...
-		exit()
 
 	while True:
 		keyword = menu()

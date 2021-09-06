@@ -77,11 +77,17 @@ def download_mp3(url: str) -> bytes:
 
 
 @retry(stop_max_attempt_number=2)
-def search(keyword: str) -> List[Class.Song]:
+def search(keyword: str, start: int = 1) -> (List[Class.Song], int):
+	"""
+
+	:param keyword: search keyword
+	:param start: start of return index, if first search, leave it default
+	:return: List[Class.song]: list of search result, int: length of all result
+	"""
 	from Class import Song
 
 	# Get only top 30 records
-	param = {"key": keyword, 'pn': '1', 'rn': '30'}
+	param = {"key": keyword, 'pn': str(start), 'rn': str(start + 29)}
 	try:
 		# We use a stronger and robuster handling system in my_get
 		# # Get kw_token and csrf token
@@ -114,7 +120,7 @@ def search(keyword: str) -> List[Class.Song]:
 		# # For Debug
 		# for i in song_list:
 		# 	print(i)
-		return song_list
+		return song_list, search_list['total']
 	except requests.ConnectionError:
 		print("search error, have tried 3 times, please check your internet connection")
 
