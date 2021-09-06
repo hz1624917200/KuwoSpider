@@ -1,7 +1,13 @@
 # Default page, will add main script
+from typing import List
 import pyfiglet
 from sys import argv
+
+import Class
 import Network
+
+# global variable
+rank_lists: List[Class.RankList] = []
 
 
 def print_hi(name):
@@ -35,9 +41,9 @@ def menu() -> str:
 	return input()
 
 
-def print_list(song_list: list) -> None:
-	for i, song_i in zip(range(1, len(song_list) + 1), song_list):
-		print("{:>2}: {}".format(i, song_i))
+def print_list(my_list: list) -> None:
+	for i, my_item in zip(range(1, len(my_list) + 1), my_list):
+		print("{:>2}: {}".format(i, my_item))
 
 
 def hanging_around():
@@ -46,26 +52,45 @@ def hanging_around():
 
 
 def rank():
-	print('Constructing...')
-	pass
+	# print('Rank Constructing...')
+	global rank_lists
+
+	# rank lists not initialized
+	if not rank_lists:
+		# rank list is empty, call Network to fill it
+		rank_lists = Network.fill_rank_list()
+
+	print_list(rank_lists)
 
 
 def search(kw: str) -> None:
+	import re
 	# print("Searching...")
 
 	song_list = Network.search(kw)
 	print_list(song_list)
 
 	# Attention, choice == index + 1
-	choice = 1
 	while True:
-		choice = input('choose which you want to download (input "q" to return): ')
+		choice = input('choose which you want to download (input "q" to return), support section ex "2-5": ')
+		# quit
 		if choice == 'q':
 			return
+
 		if not choice.isnumeric() or int(choice) > len(song_list) or int(choice) < 1:
-			print('Invalid input, try again.')
-			continue
-		song_list[int(choice) - 1].download()
+			res = re.match(r'\d+-\d+', choice)
+			if res:
+				(start, end, *_) = res.group().split('-')
+				if int(start) < 1 or int(end) > len(song_list):
+					print('Invalid input, try again.')
+				else:
+					# valid section input, return iterable
+					for i in range(int(start) - 1, int(end)):
+						song_list[i].download()
+			else:
+				print('Invalid input, try again.')
+		else:
+			song_list[int(choice) - 1].download()
 
 
 # Press the green button in the gutter to run the script.

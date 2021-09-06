@@ -55,6 +55,13 @@ class Song:
 		print("Downloading success, file saved to {}".format(full_name))
 
 
+class RankList:
+	def __init__(self, name: str, lid: str, parent: str):
+		self.name = name
+		self.lid = lid
+		self.parent = parent
+
+
 class MyString:
 	full_len_space = chr(12288)
 

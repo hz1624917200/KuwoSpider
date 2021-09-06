@@ -5,8 +5,9 @@ import json
 
 from typing import List
 
-# request headers from edge(chromium)
 import Class
+
+# request headers from edge(chromium)
 
 request_headers_raw = '''Pragma: no-cache
 Cache-Control: no-cache
@@ -108,6 +109,9 @@ def search(keyword: str) -> List[Class.Song]:
 	except requests.ConnectionError:
 		print("search error, have tried 3 times, please check your internet connection")
 
+
+def fill_rank_list() -> List[Class.RankList]:
+	pass
 
 if __name__ == "__main__":
 	# uri = rid2uri('3453727')
