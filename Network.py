@@ -81,13 +81,13 @@ def search(keyword: str, start: int = 1) -> (List[Class.Song], int):
 	"""
 
 	:param keyword: search keyword
-	:param start: start of return index, if first search, leave it default
+	:param start: start of page index, if first search, leave it default
 	:return: List[Class.song]: list of search result, int: length of all result
 	"""
 	from Class import Song
 
 	# Get only top 30 records
-	param = {"key": keyword, 'pn': str(start), 'rn': str(start + 29)}
+	param = {"key": keyword, 'pn': str(start), 'rn': '30'}
 	try:
 		# We use a stronger and robuster handling system in my_get
 		# # Get kw_token and csrf token
@@ -120,7 +120,7 @@ def search(keyword: str, start: int = 1) -> (List[Class.Song], int):
 		# # For Debug
 		# for i in song_list:
 		# 	print(i)
-		return song_list, search_list['total']
+		return song_list, int(search_list['total'])
 	except requests.ConnectionError:
 		print("search error, have tried 3 times, please check your internet connection")
 

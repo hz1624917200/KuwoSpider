@@ -67,8 +67,9 @@ def search(kw: str) -> None:
 	import re
 	# print("Searching...")
 
-	song_list = Network.search(kw)
+	song_list, res_length = Network.search(kw)
 	print_list(song_list)
+	start = 1
 
 	# Attention, choice == index + 1
 	while True:
@@ -80,8 +81,18 @@ def search(kw: str) -> None:
 		if choice == 'q':
 			return
 		# pageup
-		elif choice == 'u':
-			pass
+		if choice in 'udh':
+			if choice == 'u':
+				if start > 1:
+					start -= 1
+			elif choice == 'd':
+				if start < (res_length + 29) // 30:
+					start += 1
+			elif choice == 'h':
+				start = 1
+			song_list, res_length = Network.search(kw, start)
+			print_list(song_list)
+			continue
 
 		# download music by id section
 		if not choice.isnumeric() or int(choice) > len(song_list) or int(choice) < 1:
