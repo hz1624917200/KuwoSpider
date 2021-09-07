@@ -1,7 +1,6 @@
 # Default page, will add main script
 from typing import List
 import pyfiglet
-from sys import argv
 
 import Class
 import Network
@@ -51,7 +50,8 @@ def hanging_around():
 	pass
 
 
-def rank():
+#  List rank lists, make user choose one
+def list_rank():
 	# print('Rank Constructing...')
 	global rank_lists
 
@@ -59,22 +59,37 @@ def rank():
 	if not rank_lists:
 		# rank list is empty, call Network to fill it
 		rank_lists = Network.fill_rank_list()
-
 	print_list(rank_lists)
 
+	while True:
+		choice = input("select the list you want to view")
 
-def search(kw: str) -> None:
+		if choice.isnumeric():
+			choice_num = int(choice)
+			if 1 <= choice_num <= len(rank_lists):
+				rank(rank_lists[choice_num - 1])
+		else:
+			print('Invalid input, try again')
+
+
+# General list display function
+def display_list(song_list: List[Class.Song], res_length: int, page_func=None) -> None:
+	"""
+
+	:param song_list: list of songs to display
+	:param res_length: the result's full length, for paging
+	:param page_func: Page turning function, used to refresh the list, lambda
+	:return: None
+	"""
 	import re
-	# print("Searching...")
 
-	song_list, res_length = Network.search(kw)
 	print_list(song_list)
 	start = 1
 
 	# Attention, choice == index + 1
 	while True:
 		choice = input('choose which you want to download\n (input "q" to return, \
-"d" to pagedown, "u" to pageup, "h" to back head), support section ex "2-5": ')
+	"d" to pagedown, "u" to pageup, "h" to back head), support section ex "2-5": ')
 
 		# Special keyword
 		# quit
@@ -90,7 +105,7 @@ def search(kw: str) -> None:
 					start += 1
 			elif choice == 'h':
 				start = 1
-			song_list, res_length = Network.search(kw, start)
+			song_list, res_length = page_func(start)
 			print_list(song_list)
 			continue
 
@@ -112,6 +127,34 @@ def search(kw: str) -> None:
 			song_list[int(choice) - 1].download()
 
 
+# Get the specified rank, and display it
+def rank(rank_list: Class.RankList) -> None:
+	"""
+
+	:param rank_list: RankList object in Class, stands for a rank
+	:return: None
+	"""
+	song_list, res_length = Network.search_by_list(rank_list)
+	if not song_list:
+		exit(-1)
+
+	display_list(song_list, res_length, lambda page: Network.search_by_list(rank_list, page))
+
+
+def search(kw: str) -> None:
+	"""
+
+	:param kw: search keyword
+	:return: None
+	"""
+	# print("Searching...")
+
+	song_list, res_length = Network.search(kw)
+	if not song_list:
+		exit(-1)
+	display_list(song_list, res_length, lambda page: Network.search(kw, page))
+
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
 	# print a banner
@@ -127,7 +170,7 @@ if __name__ == '__main__':
 		elif keyword == '':
 			hanging_around()
 		elif keyword == 'rank()':
-			rank()
+			list_rank()
 		else:
 			# normal keyword search
 			search(keyword)

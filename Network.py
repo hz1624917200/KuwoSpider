@@ -34,7 +34,7 @@ cookies = {}
 
 
 # self defined requests.get function, before return response, update cookies and CSRF token
-@retry(stop_max_attempt_number=3, wait_random_min=3000, wait_random_max=5000)
+@retry(stop_max_attempt_number=3, wait_random_min=2000, wait_random_max=3000)
 def my_get(url: str, params: dict = None):
 	try:
 		init_url = 'https://www.kuwo.cn/'
