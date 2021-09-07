@@ -1,5 +1,5 @@
 # Default page, will add main script
-from typing import List
+from typing import List, Dict
 import pyfiglet
 
 import Class
@@ -46,13 +46,17 @@ def print_list(my_list: list) -> None:
 
 
 def hanging_around():
-	print('Constructing...')
-	pass
+
+	"""
+	crawl all rank lists and statistic words in introduction, randomly choose some of them to display,
+	if user choose some of them, then display corresponding song
+	:return: None
+	"""
+
 
 
 #  List rank lists, make user choose one
 def list_rank():
-	# print('Rank Constructing...')
 	global rank_lists
 
 	# rank lists not initialized

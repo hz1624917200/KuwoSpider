@@ -133,6 +133,7 @@ def search(keyword: str, start: int = 1) -> (List[Class.Song], int):
 @retry(stop_max_attempt_number=2)
 def search_by_list(rank_list: Class.RankList, page: int = 1) -> (List[Class.Song], int):
 	"""
+	input a rank list, return songs on that list
 
 	:param rank_list: Rank list object, stands for a rank list
 	:param page: Page index for searching
@@ -162,6 +163,11 @@ def search_by_list(rank_list: Class.RankList, page: int = 1) -> (List[Class.Song
 
 
 def fill_rank_list() -> List[Class.RankList]:
+	"""
+	fill the parent rank lists, called by list_rank in Class.py
+
+	:return: return a list of rank_lists
+	"""
 	from Class import RankList
 
 	base_url = 'https://www.kuwo.cn/api/www/bang/bang/bangMenu?httpsStatus=1'
