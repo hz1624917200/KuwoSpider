@@ -59,11 +59,12 @@ def list_rank():
 	if not rank_lists:
 		# rank list is empty, call Network to fill it
 		rank_lists = Network.fill_rank_list()
-	print_list(rank_lists)
 
 	while True:
-		choice = input("select the list you want to view")
-
+		print_list(rank_lists)
+		choice = input("select the list you want to view('q' to quit): ")
+		if choice == 'q':
+			return
 		if choice.isnumeric():
 			choice_num = int(choice)
 			if 1 <= choice_num <= len(rank_lists):

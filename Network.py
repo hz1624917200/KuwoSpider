@@ -14,8 +14,8 @@ Cache-Control: no-cache
 Sec-Ch-Ua: "Chromium";v="92", " Not A;Brand";v="99", "Microsoft Edge";v="92"
 Accept: application/json, text/plain, */*
 Sec-Ch-Ua-Mobile: ?0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 \
-Safari/537.36 Edg/92.0.902.84
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) \
+Chrome/93.0.4577.63 Safari/537.36 Edg/93.0.961.38
 Sec-Fetch-Site: same-origin
 Sec-Fetch-Mode: cors
 Sec-Fetch-Dest: empty
@@ -36,19 +36,25 @@ cookies = {}
 # self defined requests.get function, before return response, update cookies and CSRF token
 @retry(stop_max_attempt_number=3, wait_random_min=2000, wait_random_max=3000)
 def my_get(url: str, params: dict = None):
-	try:
-		init_url = 'https://www.kuwo.cn/'
-		if cookies == {} and url != init_url:
-			my_get(init_url)
-		response = requests.get(url, params, headers=request_headers, cookies=cookies)
-		cookies.update(dict_from_cookiejar(response.cookies))
-		if 'kw_token' in cookies:
-			request_headers.update({"CSRF": cookies['kw_token']})
-		return response
-	except ValueError as e:
-		# print(e.args)
-		if e.args[0] == "check_hostname requires server_hostname":
-			print('Proxy setting error, please check your network settings')
+	# # Proxy, for debug only
+	# proxy_host = "127.0.0.1:8080"
+	# proxies = {'http': 'http://' + proxy_host, 'https': 'https://' + proxy_host}
+
+	# try:
+	init_url = 'https://www.kuwo.cn/'
+	if cookies == {} and url != init_url:
+		my_get(init_url)
+	# response = requests.get(url, params, headers=request_headers, cookies=cookies, proxies=proxies, verify=False)
+	response = requests.get(url, params, headers=request_headers, cookies=cookies)
+	cookies.update(dict_from_cookiejar(response.cookies))
+	if 'kw_token' in cookies:
+		request_headers.update({"CSRF": cookies['kw_token']})
+	return response
+
+	# except ValueError as e:
+	# 	# print(e.args)
+	# 	if e.args[0] == "check_hostname requires server_hostname":
+	# 		print('Proxy setting error, please check your network settings')
 
 
 # region Song_Download
@@ -84,7 +90,6 @@ def search(keyword: str, start: int = 1) -> (List[Class.Song], int):
 	:param start: start of page index, if first search, leave it default
 	:return: List[Class.song]: list of search result, int: length of all result
 	"""
-	from Class import Song
 
 	# Get only top 30 records
 	param = {"key": keyword, 'pn': str(start), 'rn': '30'}
@@ -108,7 +113,7 @@ def search(keyword: str, start: int = 1) -> (List[Class.Song], int):
 		song_list = []
 		for record in search_list['list']:
 			# Create a new Song instance
-			song = Song(record['name'], record['musicrid'].split('_')[-1], record['artist'],
+			song = Class.Song(record['name'], record['musicrid'].split('_')[-1], record['artist'],
 			record['album'], duration=int(record['duration']))
 
 			# This song is not free
@@ -121,6 +126,37 @@ def search(keyword: str, start: int = 1) -> (List[Class.Song], int):
 		# for i in song_list:
 		# 	print(i)
 		return song_list, int(search_list['total'])
+	except requests.ConnectionError:
+		print("search error, have tried 3 times, please check your internet connection")
+
+
+@retry(stop_max_attempt_number=2)
+def search_by_list(rank_list: Class.RankList, page: int = 1) -> (List[Class.Song], int):
+	"""
+
+	:param rank_list: Rank list object, stands for a rank list
+	:param page: Page index for searching
+	:return: a song list and total length of result
+	"""
+	base_url = "https://www.kuwo.cn/api/www/bang/bang/musicList"
+	params = {'bangId': rank_list.lid, 'pn': str(page), 'rn': '30', 'httpsStatus': '1'}
+
+	try:
+		response = my_get(base_url, params)
+		search_list = json.loads(response.text)['data']
+
+		song_list = []
+		for record in search_list['musicList']:
+			song = Class.Song(record['name'], record['musicrid'].split('_')[-1], record['artist'],
+			record['album'], duration=int(record['duration']))
+
+			# This song is not free
+			if record['payInfo']['play'] == '1111':
+				song.free = False
+
+			song_list.append(song)
+		return song_list, int(search_list['num'])
+
 	except requests.ConnectionError:
 		print("search error, have tried 3 times, please check your internet connection")
 
