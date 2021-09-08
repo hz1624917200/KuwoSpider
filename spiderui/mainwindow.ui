@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>KuwoSpider</class>
+ <widget class="QMainWindow" name="KuwoSpider">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>575</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>30</width>
+    <height>30</height>
+   </size>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="2">
+     <widget class="QLineEdit" name="input_singername">
+      <property name="text">
+       <string>宋东野</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0" colspan="5">
+     <widget class="QTextBrowser" name="textBrowser_2">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="html">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:36pt; font-weight:600; font-style:italic;&quot;&gt;酷我音乐爬虫系统&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600; font-style:italic;&quot;&gt;by ZhengHuang and HeQi&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/picture/2.jpeg&quot; /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="2">
+     <widget class="QLineEdit" name="input_rank">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="4">
+     <widget class="QLineEdit" name="input_way"/>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="rank_name">
+      <property name="font">
+       <font>
+        <family>宋体</family>
+        <pointsize>10</pointsize>
+        <italic>true</italic>
+       </font>
+      </property>
+      <property name="text">
+       <string>榜单名称</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="5">
+     <widget class="QPushButton" name="rank_button">
+      <property name="text">
+       <string>获取该榜单歌曲列表</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="hotword_name">
+      <property name="font">
+       <font>
+        <family>宋体</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>热词名称</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="url_name">
+      <property name="font">
+       <font>
+        <family>宋体</family>
+        <pointsize>10</pointsize>
+        <italic>true</italic>
+       </font>
+      </property>
+      <property name="text">
+       <string>请输入歌手名字</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="3">
+     <widget class="QLabel" name="label">
+      <property name="font">
+       <font>
+        <family>宋体</family>
+        <pointsize>10</pointsize>
+        <italic>true</italic>
+       </font>
+      </property>
+      <property name="text">
+       <string>请输入下载路径</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="3" colspan="2">
+     <widget class="QPushButton" name="all_button">
+      <property name="text">
+       <string>获取榜单列表</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="5">
+     <widget class="QTextBrowser" name="textBrowser">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="html">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;欢迎使用酷我音乐爬虫系统！以下为操作说明：&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;1.输入歌手名字和下载路径（可选），获得该歌手的歌曲列表，点击歌曲下载相应MP3至对应路径。如果要输入路径，请按照.././的格式输入，eg：d:/music/&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;2.点击‘获取榜单列表’获得所有榜单信息，选择其中一个，之后点击‘获取该榜单歌曲列表’获得对应榜单歌曲列表，下载方式同1（如果要切换榜单，请先点击‘获取榜单列表’）。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;3.不知道听点什么好？点击‘获得热词列表’，获取随机榜单的热词排名，选择一个获得含有该排名的歌曲，下载方式同1,具体使用方式同2&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="5">
+     <widget class="QPushButton" name="singername_button">
+      <property name="text">
+       <string>获得该歌手歌曲列表</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="2">
+     <widget class="QLineEdit" name="input_hotword">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="3" colspan="2">
+     <widget class="QPushButton" name="cloud_button">
+      <property name="text">
+       <string>获得热词列表</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="5">
+     <widget class="QPushButton" name="hotword_button">
+      <property name="text">
+       <string>获取该热词歌曲列表</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources>
+  <include location="picture.qrc"/>
+ </resources>
+ <connections/>
+</ui>
