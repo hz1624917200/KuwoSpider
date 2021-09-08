@@ -1,5 +1,5 @@
 # Default page, will add main script
-from typing import List, Dict
+from typing import List
 import pyfiglet
 
 import Class
@@ -60,6 +60,31 @@ def hanging_around():
 			print("Updating rank lists...")
 			rank_lists = Network.fill_rank_list()
 		word_cloud.update(rank_lists)
+
+	word_list = word_cloud.gen_word_list()
+
+	while True:
+		# print word list
+		for ind, word in zip(range(len(word_list)), word_list):
+			print('{:2}: {}'.format(ind + 1, word))
+
+		choice = input("Select word you are interested in:\n"
+		"('q' to quit, 'u' to update word cloud, 'c' to change word list)\n")
+		if choice == 'q':
+			return
+		elif choice == 'u':
+			word_cloud.update(rank_lists)
+			word_list = word_cloud.gen_word_list()
+			continue
+		elif choice == 'c':
+			word_list = word_cloud.gen_word_list()
+		else:
+			# input number, search keyword
+			if not choice.isnumeric() or int(choice) > len(word_list) or int(choice) < 1:
+				print('invalid input, please try again')
+				continue
+			# valid input, search
+			search(word_list[int(choice) - 1])
 
 
 #  List rank lists, make user choose one

@@ -95,11 +95,8 @@ class MyString:
 # Class of word cloud, 1 instance when running program
 class WordCloud:
 	def __init__(self):
-		if exists('word_cloud'):
-			with open('word_cloud', 'r') as f:
-				self.dict = json.loads(f.read())
-		else:
-			self.dict = {}
+		self.dict = {}
+		self.weights = 0
 
 	def update(self, rank_lists: List[RankList]) -> None:
 		import Network
@@ -111,21 +108,25 @@ class WordCloud:
 
 		:return:
 		"""
-		print("Database Updating...")
+		print("Word Cloud Database Updating...")
 		start = time.time()
 		random.seed(start)
+		self.dict = {}
+		self.weights = 0
 
 		# only randomly select one rank list in rank_lists
 		rank_list = random.choice(rank_lists)
+		print("Database Building on {}".format(rank_list))
 		song_list, _ = Network.search_by_list(rank_list)
 		for song, ind in zip(song_list, range(len(song_list))):
 			introduction = Network.get_introduction(song.rid)
 			if introduction:
-				tags = extract_tags(introduction, 5)
+				tags = extract_tags(introduction, 10)
 				# print(tags)
 
 				for tag in tags:
 					self.dict[tag] = self.dict.get(tag, 0) + 1
+					self.weights += 1
 
 			# Progress Bar
 			rate_progress = round((ind + 1) / len(song_list) * 100)
@@ -134,6 +135,36 @@ class WordCloud:
 			print("]{:.2f}s".format(time.time() - start), end='\r')
 			time.sleep(0.01)
 		print('\nDatabase updated successfully!')
+
+	def gen_word_list(self) -> List[str]:
+		import random
+		import time
+
+		random.seed(time.time())
+		# method 1, by frequency
+		# word_list = []
+		# for word in self.dict:
+		# 	if self.dict[word] > 1:
+		# 		word_list.append(word)
+		# while len(word_list) < 15:
+		# 	random_word = random.choice(self.dict)
+		# 	if random_word not in word_list:
+		# 		word_list.append(random_word)
+		# return word_list
+
+		# method 2, randomly select with weight
+		word_list = []
+		ind_list = sorted({random.randint(1, self.weights) for _ in range(15)})
+		p = 0
+		weight = 0
+		for word in self.dict:
+			weight += self.dict[word]
+			if weight >= ind_list[p]:
+				p += 1
+				word_list.append(word)
+				if p == len(ind_list):
+					break
+		return word_list
 
 
 # Class function test
