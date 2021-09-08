@@ -1,4 +1,3 @@
-import json
 from os.path import exists, expanduser
 from typing import List
 
@@ -85,11 +84,8 @@ class MyString:
 			' ' * (alpha_count // 2 + 1) + '\t'
 
 	def web_replace(s: str) -> str:
-		replace_dict = {'&nbsp;': MyString.full_len_space, '&apos;': '\''}
-		temp_s = s
-		for i in replace_dict:
-			temp_s = temp_s.replace(i, replace_dict[i])
-		return temp_s
+		import html
+		return html.unescape(s)
 
 
 # Class of word cloud, 1 instance when running program
