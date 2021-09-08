@@ -104,19 +104,36 @@ class WordCloud:
 	def update(self, rank_lists: List[RankList]) -> None:
 		import Network
 		from jieba.analyse import extract_tags
-
+		import time
+		import random
 		"""
 		update word lists
 
 		:return:
 		"""
-		for rank_list in rank_lists:
-			song_list, _ = Network.search_by_list(rank_list)
-			for song in song_list:
-				introduction = Network.get_introduction(song.rid)
+		print("Database Updating...")
+		start = time.time()
+		random.seed(start)
+
+		# only randomly select one rank list in rank_lists
+		rank_list = random.choice(rank_lists)
+		song_list, _ = Network.search_by_list(rank_list)
+		for song, ind in zip(song_list, range(len(song_list))):
+			introduction = Network.get_introduction(song.rid)
+			if introduction:
 				tags = extract_tags(introduction, 5)
-				print(tags)
-		pass
+				# print(tags)
+
+				for tag in tags:
+					self.dict[tag] = self.dict.get(tag, 0) + 1
+
+			# Progress Bar
+			rate_progress = round((ind + 1) / len(song_list) * 100)
+			print("{:3}%[".format(rate_progress), end='')
+			print("{:-<50}".format('*' * (rate_progress // 2)), end='')
+			print("]{:.2f}s".format(time.time() - start), end='\r')
+			time.sleep(0.01)
+		print('\nDatabase updated successfully!')
 
 
 # Class function test

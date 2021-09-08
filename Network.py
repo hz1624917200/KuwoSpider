@@ -199,11 +199,13 @@ def get_introduction(rid: str) -> str:
 
 	response = my_get(base_url + rid)
 	# print(response.text)
-
-	res = re.search(r'albuminfo:"(.*?)"', response.text).group(1)
-	res.replace('\\n', ' ')
-	# print(res)
-	return res
+	try:
+		res = re.search(r'albuminfo:"(.*?)"', response.text).group(1)
+		res.replace('\\n', ' ')
+		# print(res)
+		return res
+	except AttributeError:
+		pass
 
 
 if __name__ == "__main__":

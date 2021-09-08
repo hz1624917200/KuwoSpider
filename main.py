@@ -57,6 +57,7 @@ def hanging_around():
 
 	if not word_cloud.dict:
 		if not rank_lists:
+			print("Updating rank lists...")
 			rank_lists = Network.fill_rank_list()
 		word_cloud.update(rank_lists)
 
