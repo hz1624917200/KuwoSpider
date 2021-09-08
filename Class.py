@@ -1,4 +1,6 @@
+import json
 from os.path import exists, expanduser
+from typing import List
 
 
 class Song:
@@ -90,8 +92,36 @@ class MyString:
 		return temp_s
 
 
+# Class of word cloud, 1 instance when running program
+class WordCloud:
+	def __init__(self):
+		if exists('word_cloud'):
+			with open('word_cloud', 'r') as f:
+				self.dict = json.loads(f.read())
+		else:
+			self.dict = {}
+
+	def update(self, rank_lists: List[RankList]) -> None:
+		import Network
+		from jieba.analyse import extract_tags
+
+		"""
+		update word lists
+
+		:return:
+		"""
+		for rank_list in rank_lists:
+			song_list, _ = Network.search_by_list(rank_list)
+			for song in song_list:
+				introduction = Network.get_introduction(song.rid)
+				tags = extract_tags(introduction, 5)
+				print(tags)
+		pass
+
+
 # Class function test
 if __name__ == "__main__":
 	# test_song = Song('安河桥', '3453727', '宋东野', '安河桥北', '')
-	test_song = Song('我不难过', '95769')
-	test_song.download()
+	# test_song = Song('我不难过', '95769')
+	# test_song.download()
+	pass

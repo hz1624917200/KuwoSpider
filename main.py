@@ -7,6 +7,7 @@ import Network
 
 # global variable
 rank_lists: List[Class.RankList] = []
+word_cloud = Class.WordCloud()
 
 
 def print_hi(name):
@@ -46,13 +47,18 @@ def print_list(my_list: list) -> None:
 
 
 def hanging_around():
-
 	"""
 	crawl all rank lists and statistic words in introduction, randomly choose some of them to display,
 	if user choose some of them, then display corresponding song
+
 	:return: None
 	"""
+	global word_cloud, rank_lists
 
+	if not word_cloud.dict:
+		if not rank_lists:
+			rank_lists = Network.fill_rank_list()
+		word_cloud.update(rank_lists)
 
 
 #  List rank lists, make user choose one

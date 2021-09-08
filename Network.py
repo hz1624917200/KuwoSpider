@@ -186,6 +186,26 @@ def fill_rank_list() -> List[Class.RankList]:
 	return res_list
 
 
+def get_introduction(rid: str) -> str:
+	"""
+	Get album introduction in song detail page
+
+	:param rid: rid of a song
+	:return: introduction string
+	"""
+	import re
+
+	base_url = "https://www.kuwo.cn/play_detail/"
+
+	response = my_get(base_url + rid)
+	# print(response.text)
+
+	res = re.search(r'albuminfo:"(.*?)"', response.text).group(1)
+	res.replace('\\n', ' ')
+	# print(res)
+	return res
+
+
 if __name__ == "__main__":
 	# uri = rid2uri('3453727')
 	# print(uri)
@@ -198,4 +218,6 @@ if __name__ == "__main__":
 	# search("宋东野")
 	# search("Taylor Swift")
 
-	fill_rank_list()
+	# fill_rank_list()
+
+	get_introduction('254741')
