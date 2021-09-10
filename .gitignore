@@ -1,3 +1,4 @@
 venv/*
 __pycache__/*
 spiderui/__pycache__/*
+Documents/*

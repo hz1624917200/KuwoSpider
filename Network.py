@@ -160,6 +160,7 @@ def search_by_list(rank_list: Class.RankList, page: int = 1) -> (List[Class.Song
 
 	except requests.ConnectionError:
 		print("search error, have tried 3 times, please check your internet connection")
+		return None, None
 
 
 def fill_rank_list() -> List[Class.RankList]:
