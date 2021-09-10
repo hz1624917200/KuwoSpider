@@ -27,6 +27,9 @@ class ListView(QWidget):  # 列表类
 		song_name = self.qList[qModelIndex.row()].split()[0]
 		song_name = song_name.replace('*', "")
 		full_name = self.path + song_name + '.mp3'
+		if not exists(self.path):
+			QMessageBox.information(self, '下载提示', '路径不存在，请重试。')
+			return
 		if exists(full_name):
 			choice = QMessageBox.question(self, '下载提示', '该歌曲已存在，要替换它吗？', QMessageBox.Yes | QMessageBox.No)
 			print('hello,exists')
