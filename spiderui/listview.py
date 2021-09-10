@@ -25,11 +25,11 @@ class ListView(QWidget):  # 列表类
 			self.qList = [str(ch) for ch in ListView.Ranksong_List[0]]
 			self.list = ListView.Ranksong_List[0]
 		song_name = self.qList[qModelIndex.row()].split()[0]
+		song_name = song_name.replace('*', "")
 		full_name = self.path + song_name + '.mp3'
-
 		if exists(full_name):
 			choice = QMessageBox.question(self, '下载提示', '该歌曲已存在，要替换它吗？', QMessageBox.Yes | QMessageBox.No)
-
+			print('hello,exists')
 			if choice == QMessageBox.Yes:
 				QMessageBox.information(self, '下载提示', '替换成功！')
 			else:
@@ -58,22 +58,21 @@ class ListView(QWidget):  # 列表类
 			QMessageBox.information(self, '搜索提示', '搜索失败，已经尝试3次，请检查网络连接或代理设置')
 
 	def get_list(self):  # 获取歌手列表或榜单列表
-		# try:
-		if self.flag == 'song' and self.name != 'hotword':
-			self.list = Network.search(self.name, page.PageChange.flag)[0]
-			self.qList = [str(ch) for ch in self.list]
-		elif self.name is None:  # 获得总榜列表
-			self.rank_list = Network.fill_rank_list()
-			self.qList = [str(ch) for ch in Network.fill_rank_list()]
-		elif self.name == 'hotword':
-			hotword = Class.WordCloud()
-			hotword.update(Network.fill_rank_list())
-			self.qList = hotword.gen_word_list()
-		else:
-			pass
-
-	# except:
-	# QMessageBox.information(self,'搜索提示','搜索失败，已经尝试3次，请检查网络连接或代理设置')
+		try:
+			if self.flag == 'song' and self.name != 'hotword':
+				self.list = Network.search(self.name, page.PageChange.flag)[0]
+				self.qList = [str(ch) for ch in self.list]
+			elif self.name is None:  # 获得总榜列表
+				self.rank_list = Network.fill_rank_list()
+				self.qList = [str(ch) for ch in Network.fill_rank_list()]
+			elif self.name == 'hotword':
+				hotword = Class.WordCloud()
+				hotword.update(Network.fill_rank_list())
+				self.qList = hotword.gen_word_list()
+			else:
+				pass
+		except:
+			QMessageBox.information(self, '搜索提示', '搜索失败，已经尝试3次，请检查网络连接或代理设置')
 
 	def message(self, qModelIndex):
 		rank_name = self.qList[qModelIndex.row()].split()[0]
